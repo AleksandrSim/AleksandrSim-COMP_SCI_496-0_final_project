@@ -6,18 +6,14 @@ import torchvision
 import torch
 import numpy as np
 
-CLEANED_IMGS = '/Users/aleksandrsimonyan/Desktop/cleaned_coco_2/'
-TRAIN_LISTS = '/Users/aleksandrsimonyan/Documents/GitHub/AleksandrSim-COMP_SCI_496-0_final_project/cacd2000-lists'
-
-
 class CACD(data.Dataset):
     def __init__(self,split="train",transforms=None, label_transforms=None):
 
         self.split=split
 
         #define label 128*128 for condition generate image
-        list_root = os.path.abspath(TRAIN_LISTS)
-        data_root = CLEANED_IMGS
+        list_root = os.path.abspath("./data/cacd2000-lists")
+        data_root = "/home/guyuchao/Dataset/ExperimentDataset/CACD2000-aligned"
 
         self.condition128=[]
         full_one=np.ones((128,128),dtype=np.float32)
@@ -146,8 +142,8 @@ class CACD(data.Dataset):
             condition_128_tensor_li=[]
             if self.label_transforms is not None:
                 for condition in self.condition128:
-                    condition_128_tensor_li.append(self.label_transforms(condition))
-            return source_img_128,condition_128_tensor_li
+                    condition_128_tensor_li.append(self.label_transforms(condition).cuda())
+            return source_img_128.cuda(),condition_128_tensor_li
 
     def __len__(self):
         if self.split is "train":
@@ -169,8 +165,8 @@ if __name__=="__main__":
         batch_size=32,
         shuffle=True
     )
-for idx,\
+    for idx,\
         (source_img_227,source_img_128,true_label_img,true_label_128,true_label_64,\
                fake_label_64, true_label) in enumerate(train_loader):
-        print(source_img_227)
+        print(true_label)
         break
