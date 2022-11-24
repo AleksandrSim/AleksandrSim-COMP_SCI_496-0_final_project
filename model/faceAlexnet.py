@@ -4,6 +4,7 @@ import os
 import torch.nn.functional as F
 
 from utils.network import Conv2d #same padding
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 '''
 class AlexNet_Feature_Extractor(nn.Module):
@@ -121,11 +122,11 @@ class AgeAlexNet(nn.Module):
 class AgeClassify:
     def __init__(self):
         #step 1:define model
-        self.model=AgeAlexNet(pretrainded=False).cuda()
+        self.model=AgeAlexNet(pretrainded=False).to(DEVICE)
         #step 2:define optimizer
         self.optim=torch.optim.Adam(self.model.parameters(),lr=1e-4,betas=(0.5, 0.999))
         #step 3:define loss
-        self.criterion=nn.CrossEntropyLoss().cuda()
+        self.criterion=nn.CrossEntropyLoss().to(DEVICE)
 
     def train(self,input,label):
         self.model.train()

@@ -8,7 +8,7 @@ import logging
 from tqdm import tqdm
 from torchvision.utils import save_image
 #user import
-from data_generator.DataLoader_IpcGans import CACD
+from data_loader.ipcgan_dataloader import CACD
 from model.IPCGANs import IPCGANs
 from utils.io import check_dir,Img_to_zero_center,Reverse_zero_center
 from datetime import datetime

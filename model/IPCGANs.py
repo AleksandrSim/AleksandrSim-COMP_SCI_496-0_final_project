@@ -8,6 +8,8 @@ from model.faceAlexnet import AgeAlexNet
 from utils.network import Conv2d #same padding
 from utils.io import Img_to_zero_center
 
+
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 class PatchDiscriminator(nn.Module):
     def __init__(self):
         super(PatchDiscriminator, self).__init__()
@@ -75,14 +77,14 @@ class IPCGANs:
         self.d_lr=lr
         self.g_lr=lr
 
-        self.generator=Generator().cuda()
-        self.discriminator=PatchDiscriminator().cuda()
+        self.generator=Generator().to(DEVICE)
+        self.discriminator=PatchDiscriminator().to(DEVICE)
         if age_classifier_path is not None:
-            self.age_classifier=AgeAlexNet(pretrainded=True,modelpath=age_classifier_path).cuda()
+            self.age_classifier=AgeAlexNet(pretrainded=True,modelpath=age_classifier_path).to(DEVICE)
         else:
             self.age_classifier = AgeAlexNet(pretrainded=False).cuda()
-        self.MSEloss=nn.MSELoss().cuda()
-        self.CrossEntropyLoss=nn.CrossEntropyLoss().cuda()
+        self.MSEloss=nn.MSELoss().to(DEVICE)
+        self.CrossEntropyLoss=nn.CrossEntropyLoss().to(DEVICE)
 
         self.gan_loss_weight=gan_loss_weight
         self.feature_loss_weight = feature_loss_weight
@@ -113,7 +115,7 @@ class IPCGANs:
         return generate_image
 
     def cuda(self):
-        self.generator=self.generator.cuda()
+        self.generator=self.generator.to(DEVICE)
 
     def train(self,source_img_227,source_img_128,true_label_img,true_label_128,true_label_64,\
                fake_label_64, age_label):
@@ -137,7 +139,7 @@ class IPCGANs:
         #d1 logit ,discriminator 1 means true,0 means false.
         d1_logit=self.discriminator(true_label_img,condition=true_label_64)
 
-        d1_real_loss=self.MSEloss(d1_logit,torch.ones((d1_logit.size())).cuda())
+        d1_real_loss=self.MSEloss(d1_logit,torch.ones((d1_logit.size())).to(DEVICE))
 
         #real img, false label
         d2_logit=self.discriminator(true_label_img,condition=fake_label_64)
@@ -145,8 +147,8 @@ class IPCGANs:
 
         #fake img,real label
         d3_logit=self.discriminator(self.g_source,condition=true_label_64)
-        d3_fake_loss=self.MSEloss(d3_logit,torch.zeros((d1_logit.size())).cuda())#use this for discriminator
-        d3_real_loss=self.MSEloss(d3_logit,torch.ones((d1_logit.size())).cuda())#use this for genrator
+        d3_fake_loss=self.MSEloss(d3_logit,torch.zeros((d1_logit.size())).to(DEVICE))#use this for discriminator
+        d3_real_loss=self.MSEloss(d3_logit,torch.ones((d1_logit.size())).to(DEVICE))#use this for genrator
 
         self.d_loss=(1./2 * (d1_real_loss + 1. / 2 * (d2_fake_loss + d3_fake_loss))) * self.gan_loss_weight
         g_loss=(1./2*d3_real_loss)*self.gan_loss_weight
@@ -175,11 +177,12 @@ class IPCGANs:
 
 
 if __name__=="__main__":
-    tensor=torch.ones((2,3,128,128)).cuda()
-    condition=torch.ones((2,5,64,64)).cuda()
+    tensor=torch.ones((2,3,128,128)).to(DEVICE)
+    condition=torch.ones((2,5,64,64)).to(DEVICE)
 
-    discriminator=PatchDiscriminator().cuda()
+    discriminator=PatchDiscriminator().to(DEVICE)
     from tensorboardX import SummaryWriter
+
     print(discriminator(tensor,condition).size())
-    with SummaryWriter(comment='Net1')as w:
-        w.add_graph(discriminator, (tensor,condition))
+    print(discriminator)
+

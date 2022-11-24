@@ -24,6 +24,8 @@ class PrepareDataset:
 
     def iterate(self):
         for file in os.listdir(self.path_inp):
+            if file =='.DS_Store':
+                continue
             img_name = os.path.join(self.path_inp, file)
             if os.path.isfile(img_name):
                 self.filter(file)
@@ -39,14 +41,18 @@ class PrepareDataset:
             minSize=(30, 30))
         if len(faces) == 0:
             self.exc_counter += 1
-            Image.fromarray(image.astype(np.uint8)).save(os.path.join('/Users/aleksandrsimonyan/Desktop/trash', img_name))
+            image = cv2.resize(image, self.dimens)
+
+            Image.fromarray(image.astype(np.uint8)).save(os.path.join('/Users/aleksandrsimonyan/Desktop/trash_coco', img_name))
+            Image.fromarray(image.astype(np.uint8)).save(os.path.join('/Users/aleksandrsimonyan/Desktop/unified_coco', img_name))
 
         else:
-
             for (x, y, w, h) in faces:
                 faces = image[y:y + h, x:x + w]
                 warped = cv2.resize(faces, self.dimens)
             Image.fromarray(warped.astype(np.uint8)).save(os.path.join(self.path_out,img_name))
+            Image.fromarray(warped.astype(np.uint8)).save(os.path.join('/Users/aleksandrsimonyan/Desktop/unified_coco', img_name))
+
             self.counter += 1
             print(f"\rImages processed -> {self.counter} and number of excluded images -> {self.exc_counter}", end='')
             sys.stdout.flush()

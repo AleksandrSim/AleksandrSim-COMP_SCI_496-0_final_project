@@ -6,15 +6,12 @@ import torchvision
 import torch
 import numpy as np
 
+list_root = os.path.abspath("/Users/aleksandrsimonyan/Documents/GitHub/AleksandrSim-COMP_SCI_496-0_final_project/cacd2000-lists")
+data_root = "/Users/aleksandrsimonyan/Desktop/unified_coco/"
+
 class CACD(data.Dataset):
     def __init__(self,split="train",transforms=None, label_transforms=None):
-
         self.split=split
-
-        #define label 128*128 for condition generate image
-        list_root = os.path.abspath("./data/cacd2000-lists")
-        data_root = "/home/guyuchao/Dataset/ExperimentDataset/CACD2000-aligned"
-
         self.condition128=[]
         full_one=np.ones((128,128),dtype=np.float32)
         for i in range(5):
@@ -44,7 +41,6 @@ class CACD(data.Dataset):
             label_pair.append(int(items[1]))
             self.label_pairs.append(label_pair)
 
-        #define group_images
         group_lists = [
             os.path.join(list_root, 'train_age_group_0.txt'),
             os.path.join(list_root, 'train_age_group_1.txt'),
@@ -96,27 +92,21 @@ class CACD(data.Dataset):
             pair_idx=idx//self.batch_size #a batch train the same pair
             true_label=int(self.label_pairs[pair_idx][0])
             fake_label=int(self.label_pairs[pair_idx][1])
-
             true_label_128=self.condition128[true_label]
             true_label_64=self.condition64[true_label]
             fake_label_64=self.condition64[fake_label]
-
             true_label_img=pil_loader(self.label_group_images[true_label][self.train_group_pointer[true_label]]).resize((128,128))
             source_img=pil_loader(self.source_images[self.source_pointer])
-
             source_img_227=source_img.resize((227,227))
             source_img_128=source_img.resize((128,128))
-
             if self.train_group_pointer[true_label]<len(self.label_group_images[true_label])-1:
                 self.train_group_pointer[true_label]+=1
             else:
                 self.train_group_pointer[true_label]=0
-
             if self.source_pointer<len(self.source_images)-1:
                 self.source_pointer+=1
             else:
                 self.source_pointer=0
-
             if self.transforms is not None:
                 true_label_img=self.transforms(true_label_img)
                 source_img_227=self.transforms(source_img_227)
@@ -153,20 +143,19 @@ class CACD(data.Dataset):
 
 if __name__=="__main__":
     transforms = torchvision.transforms.Compose([
-        torchvision.transforms.ToTensor(),
-        torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225])
-    ])
-    label_transforms=torchvision.transforms.Compose([
+        torchvision.transforms.ToTensor()    ])
+    label_transforms = torchvision.transforms.Compose([
         torchvision.transforms.ToTensor(),
     ])
-    CACD_dataset=CACD(transforms,label_transforms)
+    train_dataset = CACD("train",transforms, label_transforms)
     train_loader = torch.utils.data.DataLoader(
-        dataset=CACD_dataset,
+        dataset=train_dataset,
         batch_size=32,
         shuffle=True
     )
+    #step4: define train/test dataloader
+    train_dataset = CACD("train",transforms, label_transforms)
     for idx,\
         (source_img_227,source_img_128,true_label_img,true_label_128,true_label_64,\
-               fake_label_64, true_label) in enumerate(train_loader):
-        print(true_label)
-        break
+               fake_label_64, true_label) in enumerate(train_dataset):
+        print(true_label_64)
