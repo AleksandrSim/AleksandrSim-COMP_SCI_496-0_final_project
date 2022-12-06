@@ -7,8 +7,8 @@ import torch
 
 class CACD(data.Dataset):
     def __init__(self, split='train', transforms=None, label_transforms=None):
-        list_root = "/Users/aleksandrsimonyan/Documents/GitHub/AleksandrSim-COMP_SCI_496-0_final_project/CACD2000-lists"
-        data_root = "/Users/aleksandrsimonyan/Desktop/unified_coco"
+        list_root = '/home/ubuntu/AleksandrSim-COMP_SCI_496-0_final_project/cacd2000-lists'
+        data_root = '/home/ubuntu/unified_coco'
         if split == "train":
             self.list_path=os.path.join(list_root,"train.txt")
         else:
@@ -22,12 +22,16 @@ class CACD(data.Dataset):
                 line.strip()
                 item=line.split()
                 image_label=[]
+
+                if len(item)< 2 or not os.path.exists(data_root +'/'+ line.split(' ')[0]) or line.split(' ')[0].find('Chris_O')>0:
+                    continue
                 image_label.append(os.path.join(data_root,item[0]))
                 image_label.append(np.array(item[1],dtype=np.int))
                 self.images_labels.append(image_label)
 
     def __getitem__(self, idx):
         img_path,label=self.images_labels[idx]
+
         img=Image.open(img_path)
 
         if self.transform is not None:

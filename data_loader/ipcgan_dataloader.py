@@ -6,8 +6,8 @@ import torchvision
 import torch
 import numpy as np
 
-list_root = os.path.abspath("/Users/aleksandrsimonyan/Documents/GitHub/AleksandrSim-COMP_SCI_496-0_final_project/cacd2000-lists")
-data_root = "/Users/aleksandrsimonyan/Desktop/unified_coco/"
+list_root = '/home/ubuntu/AleksandrSim-COMP_SCI_496-0_final_project/cacd2000-lists'
+data_root = '/home/ubuntu/unified_coco'
 
 class CACD(data.Dataset):
     def __init__(self,split="train",transforms=None, label_transforms=None):
@@ -57,11 +57,14 @@ class CACD(data.Dataset):
             group_images = []
             for l in lines:
                 items = l.split()
+
+                if len(items)< 2 or not os.path.exists(data_root +'/'+ items[0]) or items[0].find('Chris_O')>0:
+                    continue
                 group_images.append(os.path.join(data_root, items[0]))
             self.label_group_images.append(group_images)
 
         #define train.txt
-        if self.split is "train":
+        if self.split == "train":
             self.source_images = []#which use to aging transfer
             with open(os.path.join(list_root, 'train.txt'), 'r') as f:
                 lines = f.readlines()
@@ -69,6 +72,10 @@ class CACD(data.Dataset):
             shuffle(lines)
             for l in lines:
                 items = l.split()
+
+                if len(items)< 2 or not os.path.exists(data_root +'/'+ items[0]) or items[0].find('Chris_O')>0:
+                    continue
+                print(l)
                 self.source_images.append(os.path.join(data_root, items[0]))
         else:
             self.source_images = []  # which use to aging transfer
@@ -78,6 +85,10 @@ class CACD(data.Dataset):
             shuffle(lines)
             for l in lines:
                 items = l.split()
+
+
+                if len(items) < 2 or not os.path.exists(data_root + '/' + items[0]) or items[0].find('Chris_O') > 0:
+                    continue
                 self.source_images.append(os.path.join(data_root, items[0]))
 
         #define pointer
@@ -88,7 +99,7 @@ class CACD(data.Dataset):
         self.label_transforms=label_transforms
 
     def __getitem__(self, idx):
-        if self.split is "train":
+        if self.split == "train":
             pair_idx=idx//self.batch_size #a batch train the same pair
             true_label=int(self.label_pairs[pair_idx][0])
             fake_label=int(self.label_pairs[pair_idx][1])
@@ -136,7 +147,7 @@ class CACD(data.Dataset):
             return source_img_128.cuda(),condition_128_tensor_li
 
     def __len__(self):
-        if self.split is "train":
+        if self.split == "train":
             return len(self.label_pairs)
         else:
             return len(self.source_images)

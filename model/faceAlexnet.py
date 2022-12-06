@@ -126,7 +126,10 @@ class AgeClassify:
         #step 2:define optimizer
         self.optim=torch.optim.Adam(self.model.parameters(),lr=1e-4,betas=(0.5, 0.999))
         #step 3:define loss
-        self.criterion=nn.CrossEntropyLoss().to(DEVICE)
+        self.criterion=nn.CrossEntropyLoss().to(
+
+
+        )
 
     def train(self,input,label):
         self.model.train()

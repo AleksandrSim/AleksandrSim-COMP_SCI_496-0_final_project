@@ -7,9 +7,9 @@ from model.resnet import BasicBlock
 from model.faceAlexnet import AgeAlexNet
 from utils.network import Conv2d #same padding
 from utils.io import Img_to_zero_center
-
-
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
 class PatchDiscriminator(nn.Module):
     def __init__(self):
         super(PatchDiscriminator, self).__init__()
@@ -181,7 +181,6 @@ if __name__=="__main__":
     condition=torch.ones((2,5,64,64)).to(DEVICE)
 
     discriminator=PatchDiscriminator().to(DEVICE)
-    from tensorboardX import SummaryWriter
 
     print(discriminator(tensor,condition).size())
     print(discriminator)

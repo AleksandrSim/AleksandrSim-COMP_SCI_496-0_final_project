@@ -1,4 +1,5 @@
 import torch
+import torch
 import torchvision
 import torch.utils.data as data
 import os
@@ -7,9 +8,10 @@ import argparse
 import logging
 from tqdm import tqdm
 #user import
-from data_loader.DataLoader_Pretrain_Alexnet import CACD
-from model.faceAlexnet import AgeClassify
 from utils.io import check_dir,Img_to_zero_center
+
+from model.faceAlexnet import AgeClassify
+from data_loader.DataLoader_Pretrain_Alexnet import CACD
 
 #step1: define argument
 parser = argparse.ArgumentParser(description='pretrain age classifier')
@@ -112,4 +114,5 @@ def main():
                 logger.info(format_str % (train_correct.cpu().numpy()/train_total))
 
 if __name__ == '__main__':
+#    print("25_Chris_O'Dowd_0012.jpg" in os.listdir('/home/ubuntu/AleksandrSim-COMP_SCI_496-0_final_project/cacd2000-lists'))
     main()
