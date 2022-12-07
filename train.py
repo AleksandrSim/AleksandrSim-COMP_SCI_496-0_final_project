@@ -32,7 +32,7 @@ parser.add_argument('--gan_loss_weight', type=float, help='gan_loss_weight', def
 parser.add_argument('--feature_loss_weight', type=float, help='fea_loss_weight', default=0.5e-4)
 parser.add_argument('--age_loss_weight', type=float, help='age_loss_weight', default=30)
 parser.add_argument('--age_groups', type=int, help='the number of different age groups', default=5)
-parser.add_argument('--age_classifier_path', type=str, help='directory of age classification model', default='/home/ubuntu/AleksandrSim-COMP_SCI_496-0_final_project/checkpoint/pretrain_alexnet/saved_parameters/epoch_4_iter_0.pth')
+parser.add_argument('--age_classifier_path', type=str, help='directory of age classification model', default='/home/ubuntu/AleksandrSim-COMP_SCI_496-0_final_project/checkpoint/pretrain_alexnet/saved_parameters/epoch_16_iter_0.pth')
 #parser.add_argument('--feature_extractor_path', type=str, help='directory of pretrained alexnet', default='/home/guyuchao/Dataset/Pretrain Model/alexnet-owt-4df8aa71.pth')
 
 # Data and IO

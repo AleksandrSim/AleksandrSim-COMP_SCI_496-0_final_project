@@ -75,7 +75,6 @@ class CACD(data.Dataset):
 
                 if len(items)< 2 or not os.path.exists(data_root +'/'+ items[0]) or items[0].find('Chris_O')>0:
                     continue
-                print(l)
                 self.source_images.append(os.path.join(data_root, items[0]))
         else:
             self.source_images = []  # which use to aging transfer
