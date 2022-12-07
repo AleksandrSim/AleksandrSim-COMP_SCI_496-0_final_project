@@ -1,5 +1,4 @@
 import torch
-import torch
 import torchvision
 import torch.utils.data as data
 import os
@@ -17,7 +16,7 @@ from data_loader.DataLoader_Pretrain_Alexnet import CACD
 parser = argparse.ArgumentParser(description='pretrain age classifier')
 # Optimizer
 parser.add_argument('--learning_rate', '--lr', type=float, help='learning rate', default=1e-4)
-parser.add_argument('--batch_size', '--bs', type=int, help='batch size', default=512)
+parser.add_argument('--batch_size', '--bs', type=int, help='batch size', default=128)
 parser.add_argument('--max_epoches', type=int, help='Number of epoches to run', default=200)
 parser.add_argument('--val_interval', type=int, help='Number of steps to validate', default=20000)
 parser.add_argument('--save_interval', type=int, help='Number of batches to save model', default=20000)

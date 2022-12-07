@@ -20,7 +20,7 @@ TIMESTAMP = "{0:%Y-%m-%d_%H-%M-%S}".format(datetime.now())
 
 # Optimizer
 parser.add_argument('--learning_rate', '--lr', type=float, help='learning rate', default=1e-4)
-parser.add_argument('--batch_size', '--bs', type=int, help='batch size', default=32)
+parser.add_argument('--batch_size', '--bs', type=int, help='batch size', default=128)
 parser.add_argument('--max_epoches', type=int, help='Number of epoches to run', default=200)
 parser.add_argument('--val_interval', type=int, help='Number of steps to validate', default=1000)
 parser.add_argument('--save_interval', type=int, help='Number of batches to save model', default=500)

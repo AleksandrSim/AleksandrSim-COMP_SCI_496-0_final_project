@@ -94,7 +94,7 @@ class CACD(data.Dataset):
         #define pointer
         self.train_group_pointer=[0,0,0,0,0]
         self.source_pointer=0
-        self.batch_size=32
+        self.batch_size=128
         self.transforms=transforms
         self.label_transforms=label_transforms
 
@@ -161,7 +161,7 @@ if __name__=="__main__":
     train_dataset = CACD("train",transforms, label_transforms)
     train_loader = torch.utils.data.DataLoader(
         dataset=train_dataset,
-        batch_size=32,
+        batch_size=128,
         shuffle=True
     )
     #step4: define train/test dataloader

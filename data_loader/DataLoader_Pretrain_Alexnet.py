@@ -52,7 +52,7 @@ if __name__=="__main__":
     CACD_dataset=CACD("train",transforms,None)
     train_loader = torch.utils.data.DataLoader(
         dataset=CACD_dataset,
-        batch_size=32,
+        batch_size=128,
         shuffle=False
     )
     for idx,(img,label) in enumerate(train_loader):
